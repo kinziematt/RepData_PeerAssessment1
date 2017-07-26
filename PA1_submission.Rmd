@@ -2,10 +2,10 @@
 title: "Course Project 1"
 output: 
   html_document:
-    keep_md: true
+    keep_md: yes
 ---
 
-#1. The code for reading and processing the data is:  
+#1. The code for reading and processing our data is:  
 ```{r load, echo=TRUE}
 data<-read.csv("project 1 data.csv")
 ```
