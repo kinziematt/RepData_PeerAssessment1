@@ -1,45 +1,63 @@
----
-title: "Course Project 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Course Project 1
 
 #1. The code for reading and processing the data is:  
-```{r load, echo=TRUE}
+
+```r
 data<-read.csv("project 1 data.csv")
 ```
 
 #2. Generate a histogram of the total number of steps taken each day:  
-```{r hist_of_steps, echo=TRUE}
+
+```r
 hist(tapply(data$steps, data$date, sum), xlab="Steps Taken Each Day", main="Histogram of Total Number of Steps Taken Each Day")
-```  
+```
+
+![](PA1_submission_files/figure-html/hist_of_steps-1.png)<!-- -->
 
 #3. The mean number of steps taken is:  
-```{r mean_steps, echo=TRUE}
+
+```r
 mean(tapply(data$steps, data$date, sum), na.rm=TRUE)
-```  
+```
+
+```
+## [1] 10766.19
+```
 
 #and the median number of steps taken is:  
-```{r median_steps, echo=TRUE}
+
+```r
 median(tapply(data$steps, data$date, sum), na.rm=TRUE)
-```  
+```
+
+```
+## [1] 10765
+```
 
 #4. Here is a time-series plot of the average number of steps:  
-```{r time_plot, echo=TRUE}
+
+```r
 plot(unique(data$interval), tapply(data$steps, data$interval, mean, na.rm=TRUE), type="l", xlab="Interval (in minutes)", ylab="Average Steps Taken", main="Average Steps Taken by Minute Interval")
-```  
+```
+
+![](PA1_submission_files/figure-html/time_plot-1.png)<!-- -->
 
 #5. The five-minute interval that, on average, contains the maximum number of steps is:  
-```{r max_interval, echo=TRUE}
+
+```r
 ##find which interval has the maximum average steps
 max<-which.max(tapply(data$steps, data$interval, mean, na.rm=TRUE))
 ##extract the name of the interval which corresponds to a length in feet
 names(max)
-```  
+```
+
+```
+## [1] "835"
+```
 
 #6. The code to impute values for the NAs in the data is:  
-```{r impute, echo=TRUE}
+
+```r
 ##get average steps for each interval
 avg_steps<-tapply(data$steps, data$interval, mean, na.rm=TRUE)
 ##make data frame of invtervals and average steps
@@ -49,16 +67,34 @@ df1<-data.frame(interval=names(avg_steps), avg_steps)
 library(qdapTools)
 ## replaces NAs with average steps from corresponding interval in df1. Must convert interval column in data DF to factor because its a factor in df1 DF
 data$steps<-ifelse(is.na(data$steps), lookup(as.factor(data$interval), df1), data$steps)
-```  
+```
 #7. Using this newly refined data, here is a histogram of the total number of steps taken each day:  
-```{r hist_new, echo=TRUE}
+
+```r
 hist(tapply(data$steps, data$date, sum), xlab="Steps Taken Each Day", main="Histogram of Total Number of Steps Taken Each Day")
-```  
+```
+
+![](PA1_submission_files/figure-html/hist_new-1.png)<!-- -->
 
 #8. And here is a panel plot comparing the average number of steps taken across intervals for both weekdays and weekends:
-```{r panel_plot, echo=TRUE}
+
+```r
 ##load lubridate package and convert date column from factor to date
 library(lubridate)
+```
+
+```
+## 
+## Attaching package: 'lubridate'
+```
+
+```
+## The following object is masked from 'package:base':
+## 
+##     date
+```
+
+```r
 ##convert to date format
 data$date<-ymd(data$date)
 ##create a vector of days of the week for each date in data
@@ -82,3 +118,5 @@ new_data<-rbind(end, day)
 library(lattice)
 xyplot(steps~interval|day, data=new_data, type="l", layout=c(1,2))
 ```
+
+![](PA1_submission_files/figure-html/panel_plot-1.png)<!-- -->
